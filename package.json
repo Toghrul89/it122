@@ -1,0 +1,15 @@
+{
+  "name": "toghrul's project",
+  "version": "1.0.0",
+  "description": "Toghrul's Project",
+  "main": "index.js",
+  "directories": {
+  },
+   "dependencies": {
+  },
+  "repository": {
+    "url": "https://github.com/Toghrul89/it122"
+  },
+  "author": "Toghrul Jafarov",
+  "license": "ISC",
+}
