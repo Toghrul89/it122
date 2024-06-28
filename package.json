@@ -1,8 +1,9 @@
 {
-  "name": "toghrul's project",
+  "name": "it122",
   "version": "1.0.0",
   "description": "Toghrul's Project",
   "main": "index.js",
+  "type": "module",
   "directories": {
   },
    "dependencies": {
