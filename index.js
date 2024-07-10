@@ -24,7 +24,7 @@ http.createServer(function(req,res){
       break;
     case '/about':
       res.writeHead(200, {'Content-Type': 'text/plain'});
-      res.end('About Toghrul's Project');
+      res.end("About Toghrul's Project");
       break;
     default:
       res.writeHead(404, {'Content-Type': 'text/plain'});
