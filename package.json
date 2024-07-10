@@ -4,13 +4,11 @@
   "description": "Toghrul's Project",
   "main": "index.js",
   "type": "module",
-  "directories": {
-  },
-   "dependencies": {
-  },
+  "directories": {},
+  "dependencies": {},
   "repository": {
     "url": "https://github.com/Toghrul89/it122"
   },
   "author": "Toghrul Jafarov",
-  "license": "ISC",
+  "license": "ISC"
 }
