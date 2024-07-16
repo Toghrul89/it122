@@ -5,7 +5,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 app.set('view engine', 'ejs');
-app.use(express.static('public')); // Serve static files from the "public" directory
+app.use(express.static('public')); 
 
 app.get('/', (req, res) => {
   const books = getAll();
