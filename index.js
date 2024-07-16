@@ -1,40 +1,25 @@
-import http from 'http';
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import express from 'express';
+import { getAll, getItem } from './data.js';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const app = express();
+const port = process.env.PORT || 3000;
 
-function serveStatic(res, relativePath, contentType, responseCode) {
-  if (!responseCode) responseCode = 200;
-  const fullPath = path.join(__dirname, relativePath);
-  console.log(fullPath);
-  fs.readFile(fullPath, function (err, data) {
-    if (err) {
-      res.writeHead(500, { 'Content-Type': 'text/plain' });
-      res.end('Internal Server Error');
-    } else {
-      res.writeHead(responseCode, { 'Content-Type': contentType });
-      res.end(data);
-    }
-  });
-}
-http.createServer(function (req, res) {
-  console.log('createServer got request');
-  const urlPath = req.url.toLowerCase();
-  switch (urlPath) {
-    case '/':
-      serveStatic(res, '/../public/home.html', 'text/html');
-      break;
-    case '/about':
-      res.writeHead(200, { 'Content-Type': 'text/plain' });
-      res.end('About Toghrul Project');
-      break;
-    default:
-      res.writeHead(404, { 'Content-Type': 'text/plain' });
-      res.end('404: Page not found.');
+app.set('view engine', 'ejs');
+
+app.get('/', (req, res) => {
+  const items = getAll();
+  res.render('home', { items });
+});
+
+app.get('/detail', (req, res) => {
+  const item = getItem(req.query.id);
+  if (item) {
+    res.render('detail', { item });
+  } else {
+    res.status(404).send('Item not found');
   }
-}).listen(process.env.PORT || 3000);
+});
 
-console.log('after createServer');
+app.listen(port, () => {
+  console.log(`Server running at http://localhost:${port}/`);
+});
