@@ -1,16 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Home</title>
+  <title>Books</title>
   <link rel="stylesheet" type="text/css" href="/styles.css">
 </head>
 <body>
   <h1>Books</h1>
   <ul>
-    <% Books.forEach(item => { %>
-      <li><a href="/detail?id=<%= book.id %>"><%= item.title %></a></li>
+    <% books.forEach(book => { %>
+      <li><a href="/detail?id=<%= book.id %>"><%= book.title %></a></li>
     <% }) %>
   </ul>
 </body>
 </html>
-
