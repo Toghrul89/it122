@@ -1,4 +1,4 @@
-const items = [
+const books = [
   { id: 1, title: 'Slowness', author: 'Milan Kundera', publicationhdate: '1996' },
   { id: 2, title: 'Death with Interruptions', author: 'Jose Saramago', publicationhdate: '2005' },
   { id: 3, title: 'Emma', author: 'Jane Austen', publicationhdate: '1815' },
@@ -7,9 +7,9 @@ const items = [
 ];
 
 export function getAll() {
-  return items;
+  return books;
 }
 
 export function getItem(id) {
-  return items.find(item => item.id === parseInt(id));
+  return books.find(item => book.id === parseInt(id));
 }
