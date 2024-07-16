@@ -11,5 +11,5 @@ export function getAll() {
 }
 
 export function getItem(id) {
-  return books.find(item => book.id === parseInt(id));
+  return books.find(book => book.id === parseInt(id));
 }
