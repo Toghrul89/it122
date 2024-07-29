@@ -1,12 +1,23 @@
 import mongoose from 'mongoose';
+const { Schema } = mongoose;
 
-const bookSchema = new mongoose.Schema({
-  title: String,
-  author: String,
-  publicationdate: Number,
-  genre: String,
+import { connectionString } from '../config/db.js';
+
+mongoose.connect(connectionString, {
+    dbName: 'tjaffarov',
+    useNewUrlParser: true,
+    useUnifiedTopology: true
 });
 
-const Book = mongoose.model('Book', bookSchema);
+mongoose.connection.on('open', () => {
+  console.log('Mongoose connected.');
+});
 
-export default Book;
+const bookSchema = new Schema({
+ title: { type: String, required: true },
+ author: String,
+ publicationdate: Number,
+ genre: String
+});
+
+export const Book = mongoose.model('Book', bookSchema);
