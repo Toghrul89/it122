@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const connectionString = "mongodb+srv://tjaffarov:sUkPG5IkmAvmV35m@cluster0.drlyzrq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const connectionString = "mongodb+srv://<dbuser>:<dbpassword>@<cluster>.mongodb.net/test?retryWrites=true";
 
 export const connectDB = async () => {
   try {
@@ -15,4 +15,3 @@ export const connectDB = async () => {
     process.exit(1);
   }
 };
-
