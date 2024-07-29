@@ -5,7 +5,7 @@ const connectionString = "mongodb+srv://tjaffarov:sUkPG5IkmAvmV35m@cluster0.drly
 export const connectDB = async () => {
   try {
     await mongoose.connect(connectionString, {
-      dbName: 'tjaffarov',
+      dbName: 'dbuser',
       useNewUrlParser: true,
       useUnifiedTopology: true
     });
