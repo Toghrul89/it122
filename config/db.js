@@ -1,11 +1,11 @@
 import mongoose from 'mongoose';
 
-const connectionString = "mongodb+srv://<dbuser>:<dbpassword>@<cluster>.mongodb.net/test?retryWrites=true";
+const connectionString = "mongodb+srv://tjaffarov:sUkPG5IkmAvmV35m@cluster0.drlyzrq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 
 export const connectDB = async () => {
   try {
     await mongoose.connect(connectionString, {
-      dbName: 'tjaffarov',
+      dbName: 'books',
     });
     console.log('MongoDB connected...');
   } catch (err) {
