@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 const { Schema } = mongoose;
 
-import { connectionString } from '/config/db.js';
+import { connectionString } from '../config/db.js';
 
 mongoose.connect(connectionString, {
     dbName: 'tjaffarov',
