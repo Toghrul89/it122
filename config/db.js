@@ -6,8 +6,6 @@ export const connectDB = async () => {
   try {
     await mongoose.connect(connectionString, {
       dbName: 'tjaffarov',
-      useNewUrlParser: true,
-      useUnifiedTopology: true
     });
     console.log('MongoDB connected...');
   } catch (err) {
