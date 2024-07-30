@@ -1,43 +1,35 @@
 import express from 'express';
-import { connectDB } from './config/db.js';
-import { Book } from './models/book.js';
+import cors from 'cors';
+import connectDB from './config/db.js';
+import apiRoutes from './routes/api.js';
+import path from 'path';
 
 const app = express();
-const port = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000;
 
 connectDB();
 
+app.use(cors());
+app.use(express.json());
+
 app.set('view engine', 'ejs');
-app.use(express.static('public')); 
+app.set('views', path.join(path.resolve(), 'views'));
 
-app.get('/', (req, res, next) => {
-  Book.find({}).lean()
-    .then((books) => {
-      res.render('home', { books });
-    })
-    .catch(err => next(err));
+app.use('/api', apiRoutes);
+
+app.get('/', (req, res) => {
+  res.render('home');
 });
 
-app.get('/detail', (req, res, next) => {
-  Book.findOne({ _id: req.query.id }).lean()
-    .then((book) => {
-      res.render('detail', { book });
-    })
-    .catch(err => next(err));
+app.get('/detail/:title', async (req, res) => {
+  try {
+    const book = await Book.findOne({ title: req.params.title }).lean();
+    res.render('detail', { book });
+  } catch (err) {
+    res.status(500).send('Database error');
+  }
 });
 
-app.get('/delete', (req, res, next) => {
-  Book.deleteOne({ _id: req.query.id })
-    .then((result) => {
-      if (result.deletedCount > 0) {
-        res.send('Delete succeeded');
-      } else {
-        res.send('Delete failed: Book not found');
-      }
-    })
-    .catch(err => next(err));
-});
-
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}/`);
+app.listen(PORT, () => {
+  console.log(`Server running at http://localhost:${PORT}`);
 });
