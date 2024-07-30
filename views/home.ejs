@@ -1,18 +1,23 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>Books</title>
-  <link rel="stylesheet" type="text/css" href="/styles.css">
 </head>
 <body>
-  <h1>Books</h1>
-  <ul>
-    <% books.forEach(book => { %>
-      <li>
-        <a href="/detail?id=<%= book._id %>"><%= book.title %></a>
-        <a href="/delete?id=<%= book._id %>" onclick="return confirm('Are you sure you want to delete this book?')">Delete</a>
-      </li>
-    <% }) %>
-  </ul>
+  <h1>Book List</h1>
+  <ul id="book-list"></ul>
+  <script>
+    fetch('/api/books')
+      .then(response => response.json())
+      .then(books => {
+        const bookList = document.getElementById('book-list');
+        books.forEach(book => {
+          const li = document.createElement('li');
+          li.innerHTML = `<a href="/detail/${book.title}">${book.title}</a>`;
+          bookList.appendChild(li);
+        });
+      });
+  </script>
 </body>
 </html>
