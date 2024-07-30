@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const connectionString = "mongodb+srv://tjaffarov:sUkPG5IkmAvmV35m@cluster0.drlyzrq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 
-export const connectDB = async () => {
+const connectDB = async () => {
   try {
     await mongoose.connect(connectionString, {
       dbName: 'SCCPROJECT',
@@ -15,3 +15,5 @@ export const connectDB = async () => {
     process.exit(1);
   }
 };
+
+export default connectDB;
