@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import connectDB from './config/db.js';
 import { Book } from './models/book.js';
+import apiRoutes from './apiRoutes.js';
 import path from 'path';
 
 const app = express();
@@ -11,11 +12,10 @@ connectDB();
 
 app.use(cors());
 app.use(express.json());
+app.use('/api', apiRoutes);
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(path.resolve(), 'views'));
-
-app.use('/api', apiRoutes);
 
 app.get('/', async (req, res) => {
   try {
