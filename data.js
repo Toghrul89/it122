@@ -3,7 +3,7 @@ const books = [
   { id: 2, title: 'Death with Interruptions', author: 'Jose Saramago', publicationhdate: '2005', genre: 'novel' },
   { id: 3, title: 'Emma', author: 'Jane Austen', publicationhdate: '1815', genre: 'novel' },
   { id: 4, title: 'Animal Farm', author: 'George Orwell', publicationhdate: '1945', genre: 'novel' },
-  { id: 5, title: 'Letter to My Daughter', author: 'Maya Angelou', publicationhdate: '2008', genre: 'novel' },
+  { id: 5, title: 'Letter to My Daughter', author: 'Maya Angelou', publicationhdate: '2008', genre: 'biography / essay' },
 ];
 
 export function getAll() {
