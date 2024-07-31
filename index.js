@@ -26,7 +26,7 @@ app.get('/detail/:title', async (req, res) => {
     const book = await Book.findOne({ title: req.params.title }).lean();
     res.render('detail', { book });
   } catch (err) {
-    res.status(500).send('Database error');
+    res.status(500).send('Database error occurred');
   }
 });
 
