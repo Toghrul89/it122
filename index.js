@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import connectDB from './config/db.js';
-import apiRoutes from './routes/api.js';
+import { Book } from './models/book.js';
 import path from 'path';
 
 const app = express();
@@ -17,15 +17,26 @@ app.set('views', path.join(path.resolve(), 'views'));
 
 app.use('/api', apiRoutes);
 
-app.get('/', (req, res) => {
-  res.render('home');
+app.get('/', async (req, res) => {
+  try {
+    const books = await Book.find({}).lean();
+    res.render('home', { books });
+  } catch (err) {
+    console.error('Error fetching book list:', err);
+    res.status(500).send('Database error occurred');
+  }
 });
 
 app.get('/detail/:title', async (req, res) => {
   try {
+    console.log('Fetching details for book:', req.params.title);
     const book = await Book.findOne({ title: req.params.title }).lean();
+    if (!book) {
+      return res.status(404).send('Book not found');
+    }
     res.render('detail', { book });
   } catch (err) {
+    console.error('Error fetching book details:', err);
     res.status(500).send('Database error occurred');
   }
 });
