@@ -6,18 +6,11 @@
 </head>
 <body>
   <h1>Book List</h1>
-  <ul id="book-list"></ul>
-  <script>
-    fetch('/api/books')
-      .then(response => response.json())
-      .then(books => {
-        const bookList = document.getElementById('book-list');
-        books.forEach(book => {
-          const li = document.createElement('li');
-          li.innerHTML = `<a href="/detail/${book.title}">${book.title}</a>`;
-          bookList.appendChild(li);
-        });
-      });
-  </script>
+  <ul id="book-list">
+    <% books.forEach(book => { %>
+      <li><a href="/detail/<%= book.title %>"><%= book.title %></a></li>
+    <% }); %>
+  </ul>
 </body>
 </html>
+
