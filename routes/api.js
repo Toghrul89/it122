@@ -8,7 +8,7 @@ router.get('/books', async (req, res) => {
     const books = await Book.find({}).lean();
     res.json(books);
   } catch (err) {
-    res.status(500).send('Database error');
+    res.status(500).send('Database error occurred');
   }
 });
 
@@ -17,7 +17,7 @@ router.get('/books/:title', async (req, res) => {
     const book = await Book.findOne({ title: req.params.title }).lean();
     res.json(book);
   } catch (err) {
-    res.status(500).send('Database error');
+    res.status(500).send('Database error occurred');
   }
 });
 
@@ -27,7 +27,7 @@ router.post('/books', async (req, res) => {
     const book = await Book.updateOne({ _id }, bookData, { upsert: true });
     res.json(book);
   } catch (err) {
-    res.status(500).send('Database error');
+    res.status(500).send('Database error occurred');
   }
 });
 
@@ -40,7 +40,7 @@ router.delete('/books/:id', async (req, res) => {
       res.send('Book deleted');
     }
   } catch (err) {
-    res.status(500).send('Database error');
+    res.status(500).send('Database error occurred');
   }
 });
 
