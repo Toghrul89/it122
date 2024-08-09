@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Details</title>
+
+    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+
+<div id="root"></div>
+
+<script type="text/babel">
+    const item = <%- item %>;
+
+    const BookDetails = ({ item }) => {
+        return (
+            <div>
+                <h2>{item.title}</h2>
+                <p><strong>Author:</strong> {item.author}</p>
+                <p><strong>Publication Date:</strong> {item.publicationdate}</p>
+                <p><strong>Genre:</strong> {item.genre}</p>
+                <a href="/">Back to list</a>
+            </div>
+        );
+    };
+
+    const App = () => {
+        return <BookDetails item={item} />;
+    };
+
+    ReactDOM.render(<App />, document.getElementById('root'));
+</script>
+
+</body>
+</html>
