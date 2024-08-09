@@ -1,15 +1,47 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Books</title>
+    <title>React App Demo</title>
+
+    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
+
 <body>
-  <h1>Book List</h1>
-  <ul id="book-list">
-    <% books.forEach(book => { %>
-      <li><a href="/detail/<%= book.title %>"><%= book.title %></a></li>
-    <% }); %>
-  </ul>
+
+<div id="root"></div>
+
+<script type="text/babel">
+
+    const items = <%- items %>;
+    
+    const ItemList = ({ items, onSelect }) => {
+        return (
+            <ul>
+                {items.map((item, index) => (
+                    <li key={index} onClick={() => onSelect(item)}>
+                        {item.title}
+                    </li>
+                ))}
+            </ul>
+        );
+    };
+
+    const App = () => {
+        const handleItemClick = (item) => {
+            window.location.href = `/detail?title=${item.title}`;
+        };
+
+        return (
+            <div>
+                <h1>Book List</h1>
+                <ItemList items={items} onSelect={handleItemClick} />
+            </div>
+        );
+    };
+
+    ReactDOM.render(<App />, document.getElementById('root'));
+</script>
+
 </body>
 </html>
