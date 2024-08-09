@@ -16,7 +16,7 @@ app.set('view engine', 'ejs');
 const connectionString = "mongodb+srv://tjaffarov:sUkPG5IkmAvmV35m@cluster0.drlyzrq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 
 mongoose.connect(connectionString, {
-    dbName: 'SCCProject',
+    dbName: 'SCCPROJECT',
     useNewUrlParser: true,
     useUnifiedTopology: true
 });
