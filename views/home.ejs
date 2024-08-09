@@ -1,13 +1,16 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>React App Demo</title>
+
     <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
-
 <body>
+
 <div id="root"></div>
 
 <script type="text/babel">
@@ -18,8 +21,8 @@
             <div>
                 <h2>Book List</h2>
                 <ul>
-                    {items.map((item, index) => (
-                        <li key={index} onClick={() => onSelect(item)}>
+                    {items.map((item) => (
+                        <li key={item._id} onClick={() => onSelect(item)}>
                             {item.title} by {item.author}
                         </li>
                     ))}
@@ -28,31 +31,14 @@
         );
     };
 
-    const ItemDetails = ({ item }) => {
-        return (
-            <div>
-                <h2>Details</h2>
-                {item ? (
-                    <div>
-                        <h3>{item.title}</h3>
-                        <p>Author: {item.author}</p>
-                        <p>Publication Date: {item.publicationdate}</p>
-                        <p>Genre: {item.genre}</p>
-                    </div>
-                ) : (
-                    <p>Select a book to see details</p>
-                )}
-            </div>
-        );
-    };
-
     const App = () => {
-        const [selectedItem, setSelectedItem] = React.useState(null);
+        const handleSelect = (item) => {
+            window.location.href = `/details?title=${item.title}`;
+        };
 
         return (
             <div>
-                <ItemList items={items} onSelect={setSelectedItem} />
-                <ItemDetails item={selectedItem} />
+                <ItemList items={items} onSelect={handleSelect} />
             </div>
         );
     };
