@@ -48,7 +48,7 @@ app.listen(PORT, () => {
 app.get('/', (req, res) => {
     Book.find({}).lean()
         .then((items) => {
-            res.render('home', { items: JSON.stringify(items) });
+            res.render('home', { items });
         })
         .catch(err => {
             res.status(500).send('Database Error occurred');
