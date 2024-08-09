@@ -1,26 +1,20 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import cors from 'cors';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { Book } from './models/book.js';
+import cors from 'cors';
 
 const app = express();
-const PORT = process.env.PORT || 3000;
-
-const connectionString = 'your-mongodb-connection-string-here';
-
-mongoose.connect(connectionString, {
-    dbName: 'your-db-name-here', 
-})
-.then(() => console.log('MongoDB connected'))
-.catch((err) => console.error('MongoDB connection error:', err));
+const port = 3000;
 
 app.use(express.json());
-
 app.use('/api', cors());
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-
-app.use(express.static('public'));
 
 app.get('/', (req, res) => {
     Book.find({}).lean()
@@ -32,31 +26,6 @@ app.get('/', (req, res) => {
         });
 });
 
-app.get('/api/books', (req, res) => {
-    Book.find({}).lean()
-        .then((books) => res.json(books))
-        .catch(err => res.status(500).send('Database Error occurred'));
-});
-
-app.get('/api/books/:title', (req, res) => {
-    Book.findOne({ title: req.params.title }).lean()
-        .then((book) => res.json(book))
-        .catch(err => res.status(500).send('Database Error occurred'));
-});
-
-app.delete('/api/books/:title', (req, res) => {
-    Book.deleteOne({ title: req.params.title })
-        .then((result) => res.json(result))
-        .catch(err => res.status(500).send('Database Error occurred'));
-});
-
-app.post('/api/books', (req, res) => {
-    const book = req.body;
-    Book.updateOne({ title: book.title }, book, { upsert: true })
-        .then((result) => res.json(result))
-        .catch(err => res.status(500).send('Database Error occurred'));
-});
-
-app.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT}/`);
+app.listen(port, () => {
+    console.log(`Server running at http://localhost:${port}/`);
 });
