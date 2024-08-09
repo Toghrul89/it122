@@ -44,3 +44,14 @@ app.get('/detail/:title', async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
+
+app.get('/', (req, res) => {
+    Book.find({}).lean()
+        .then((items) => {
+            res.render('home', { items: JSON.stringify(items) });
+        })
+        .catch(err => {
+            res.status(500).send('Database Error occurred');
+        });
+});
+
