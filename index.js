@@ -7,8 +7,8 @@ const app = express();
 const PORT = 3000;
 
 app.use(cors());
-app.use(express.json()); 
-app.use(express.urlencoded({ extended: true })); 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
 app.set('view engine', 'ejs');
@@ -29,6 +29,22 @@ app.get('/', (req, res) => {
     Book.find({}).lean()
         .then((items) => {
             res.render('home', { items: JSON.stringify(items) });
+        })
+        .catch(err => {
+            res.status(500).send('Database Error occurred');
+        });
+});
+
+app.get('/details', (req, res) => {
+    const title = req.query.title;
+
+    Book.findOne({ title: title }).lean()
+        .then((item) => {
+            if (item) {
+                res.render('details', { item: JSON.stringify(item) });
+            } else {
+                res.status(404).send('Book not found');
+            }
         })
         .catch(err => {
             res.status(500).send('Database Error occurred');
