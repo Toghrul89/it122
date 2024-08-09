@@ -1,20 +1,29 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import { Book } from './models/book.js';
 import cors from 'cors';
+import { Book } from './models/book.js';
 
 const app = express();
-const port = 3000;
+const PORT = 3000;
 
-app.use(express.json());
-app.use('/api', cors());
+app.use(cors());
+app.use(express.json()); 
+app.use(express.urlencoded({ extended: true })); 
+app.use(express.static('public'));
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+
+const connectionString = "mongodb+srv://tjaffarov:sUkPG5IkmAvmV35m@cluster0.drlyzrq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+
+mongoose.connect(connectionString, {
+    dbName: 'SCCProject',
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+});
+
+mongoose.connection.on('open', () => {
+    console.log('Mongoose connected.');
+});
 
 app.get('/', (req, res) => {
     Book.find({}).lean()
@@ -26,6 +35,6 @@ app.get('/', (req, res) => {
         });
 });
 
-app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}/`);
+app.listen(PORT, () => {
+    console.log(`Server running at http://localhost:${PORT}/`);
 });
