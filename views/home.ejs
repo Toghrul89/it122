@@ -1,46 +1,64 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Book List</title>
+    <title>React App Demo</title>
     <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
+
 <body>
-    <div id="root"></div>
+<div id="root"></div>
 
-    <script type="text/babel">
-        const items = <%- JSON.stringify(items) %>;
+<script type="text/babel">
+    const items = <%- items %>;
 
-        console.log(items); 
-
-        const ItemList = ({ items, onSelect }) => {
-            return (
+    const ItemList = ({ items, onSelect }) => {
+        return (
+            <div>
+                <h2>Book List</h2>
                 <ul>
-                    {items.map((item) => (
-                        <li key={item._id} onClick={() => onSelect(item)}>
+                    {items.map((item, index) => (
+                        <li key={index} onClick={() => onSelect(item)}>
                             {item.title} by {item.author}
                         </li>
                     ))}
                 </ul>
-            );
-        };
+            </div>
+        );
+    };
 
-        const App = () => {
-            const handleSelect = (item) => {
-                alert(`You selected: ${item.title}`);
-            };
+    const ItemDetails = ({ item }) => {
+        return (
+            <div>
+                <h2>Details</h2>
+                {item ? (
+                    <div>
+                        <h3>{item.title}</h3>
+                        <p>Author: {item.author}</p>
+                        <p>Publication Date: {item.publicationdate}</p>
+                        <p>Genre: {item.genre}</p>
+                    </div>
+                ) : (
+                    <p>Select a book to see details</p>
+                )}
+            </div>
+        );
+    };
 
-            return (
-                <div>
-                    <h1>Book List</h1>
-                    <ItemList items={items} onSelect={handleSelect} />
-                </div>
-            );
-        };
+    const App = () => {
+        const [selectedItem, setSelectedItem] = React.useState(null);
 
-        ReactDOM.render(<App />, document.getElementById('root'));
-    </script>
+        return (
+            <div>
+                <ItemList items={items} onSelect={setSelectedItem} />
+                <ItemDetails item={selectedItem} />
+            </div>
+        );
+    };
+
+    ReactDOM.render(<App />, document.getElementById('root'));
+</script>
+
 </body>
 </html>
-
