@@ -1,50 +1,105 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>React App Demo</title>
-
     <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
 <body>
-
 <div id="root"></div>
-
 <script type="text/babel">
     const items = <%- items %>;
 
     const ItemList = ({ items, onSelect }) => {
         return (
+            <ul>
+                {items.map((item) => (
+                    <li key={item._id} onClick={() => onSelect(item)}>
+                        {item.title}
+                    </li>
+                ))}
+            </ul>
+        );
+    };
+
+    const Detail = ({ selectedItem, onClear, onChange }) => {
+        if (!selectedItem) {
+            return <div>Select an item to view details</div>;
+        }
+
+        return (
             <div>
-                <h2>Book List</h2>
-                <ul>
-                    {items.map((item) => (
-                        <li key={item._id} onClick={() => onSelect(item)}>
-                            {item.title} by {item.author}
-                        </li>
-                    ))}
-                </ul>
+                <h3>Details</h3>
+                <form>
+                    <div>
+                        <label>Title:</label>
+                        <input
+                            type="text"
+                            value={selectedItem.title}
+                            onChange={(e) => onChange('title', e.target.value)}
+                        />
+                    </div>
+                    <div>
+                        <label>Author:</label>
+                        <input
+                            type="text"
+                            value={selectedItem.author}
+                            onChange={(e) => onChange('author', e.target.value)}
+                        />
+                    </div>
+                    <div>
+                        <label>Publication Date:</label>
+                        <input
+                            type="text"
+                            value={selectedItem.publicationdate}
+                            onChange={(e) => onChange('publicationdate', e.target.value)}
+                        />
+                    </div>
+                    <div>
+                        <label>Genre:</label>
+                        <input
+                            type="text"
+                            value={selectedItem.genre}
+                            onChange={(e) => onChange('genre', e.target.value)}
+                        />
+                    </div>
+                    <button type="button" onClick={onClear}>Clear</button>
+                </form>
             </div>
         );
     };
 
     const App = () => {
+        const [selectedItem, setSelectedItem] = React.useState(null);
+
         const handleSelect = (item) => {
-            window.location.href = `/details?title=${item.title}`;
+            setSelectedItem(item);
+        };
+
+        const handleClear = () => {
+            setSelectedItem(null);
+        };
+
+        const handleChange = (field, value) => {
+            setSelectedItem((prevItem) => ({
+                ...prevItem,
+                [field]: value,
+            }));
         };
 
         return (
             <div>
                 <ItemList items={items} onSelect={handleSelect} />
+                <Detail
+                    selectedItem={selectedItem}
+                    onClear={handleClear}
+                    onChange={handleChange}
+                />
             </div>
         );
     };
 
     ReactDOM.render(<App />, document.getElementById('root'));
 </script>
-
 </body>
 </html>
