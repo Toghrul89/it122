@@ -1,7 +1,7 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-const Book = require('./models/book');
+import express from 'express';
+import mongoose from 'mongoose';
+import cors from 'cors';
+import Book from './models/book.js'; 
 
 const app = express();
 app.use(express.json());
