@@ -1,7 +1,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
-import Book from './models/book.js'; 
+import { Book } from './models/book.js';
 
 const app = express();
 app.use(express.json());
