@@ -1,154 +1,99 @@
+<!DOCTYPE html>
 <html>
 <head>
-    <title>React App Demo</title>
+    <title>React SPA</title>
     <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
 <body>
-<div id="root"></div>
-<script type="text/babel">
-    const { useState, useEffect } = React;
-    const ItemList = ({ items, onSelect }) => {
-        return (
-            <ul>
-                {items.map((item) => (
-                    <li key={item._id} onClick={() => onSelect(item)}>
-                        {item.title}
-                    </li>
-                ))}
-            </ul>
-        );
-    };
+    <div id="root"></div>
+    <script type="text/babel">
 
-    const Detail = ({ selectedItem, onClear, onChange, onSave, onDelete }) => {
-        if (!selectedItem) {
-            return <div>Select an item to view details</div>;
-        }
+        const App = () => {
+            const [items, setItems] = React.useState([]);
+            const [selectedItem, setSelectedItem] = React.useState(null);
 
-        return (
-            <div>
-                <h3>Details</h3>
-                <form>
-                    <div>
-                        <label>Title:</label>
-                        <input
-                            type="text"
-                            value={selectedItem.title}
-                            onChange={(e) => onChange('title', e.target.value)}
-                        />
-                    </div>
-                    <div>
-                        <label>Author:</label>
-                        <input
-                            type="text"
-                            value={selectedItem.author}
-                            onChange={(e) => onChange('author', e.target.value)}
-                        />
-                    </div>
-                    <div>
-                        <label>Publication Date:</label>
-                        <input
-                            type="text"
-                            value={selectedItem.publicationdate}
-                            onChange={(e) => onChange('publicationdate', e.target.value)}
-                        />
-                    </div>
-                    <div>
-                        <label>Genre:</label>
-                        <input
-                            type="text"
-                            value={selectedItem.genre}
-                            onChange={(e) => onChange('genre', e.target.value)}
-                        />
-                    </div>
-                    <button type="button" onClick={() => onSave(selectedItem)}>Save</button>
-                    <button type="button" onClick={onDelete}>Delete</button>
-                    <button type="button" onClick={onClear}>Clear</button>
-                </form>
-            </div>
-        );
-    };
+            React.useEffect(() => {
+                fetch('/api/books')
+                    .then(response => response.json())
+                    .then(data => setItems(data))
+                    .catch(err => console.error("Error loading data", err));
+            }, []);
 
-    const App = () => {
-        const [items, setItems] = useState([]);
-        const [selectedItem, setSelectedItem] = useState(null);
+            const handleSelectItem = (item) => {
+                setSelectedItem(item);
+            };
 
-        useEffect(() => {
-            fetch('/api/books')
+            return (
+                <div>
+                    <h1>Book List</h1>
+                    <ItemList items={items} onSelect={handleSelectItem} />
+                    <Detail item={selectedItem} />
+                </div>
+            );
+        };
+
+        const ItemList = ({ items, onSelect }) => {
+            return (
+                <ul>
+                    {items.map((item) => (
+                        <li key={item._id} onClick={() => onSelect(item)}>
+                            {item.title}
+                        </li>
+                    ))}
+                </ul>
+            );
+        };
+
+        const Detail = ({ item }) => {
+            const [formData, setFormData] = React.useState(item);
+
+            React.useEffect(() => {
+                setFormData(item);  // Update form data when item changes
+            }, [item]);
+
+            const handleChange = (e) => {
+                const { name, value } = e.target;
+                setFormData({ ...formData, [name]: value });
+            };
+
+            const handleSave = () => {
+                fetch(`/api/books/${formData._id}`, {
+                    method: formData._id ? 'PUT' : 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                })
                 .then(response => response.json())
-                .then(data => setItems(data))
-                .catch(error => console.error('Error loading items:', error));
-        }, []);
+                .then(data => {
+                    console.log("Save successful", data);
+                });
+            };
 
-        const handleSelect = (item) => {
-            setSelectedItem(item);
+            const handleDelete = () => {
+                fetch(`/api/books/${formData._id}`, { method: 'DELETE' })
+                    .then(() => {
+                        setFormData(null);
+                        console.log("Delete successful");
+                    });
+            };
+
+            if (!formData) return <div>Select an item to view details</div>;
+
+            return (
+                <div>
+                    <h2>Edit {formData.title}</h2>
+                    <input name="title" value={formData.title} onChange={handleChange} />
+                    <input name="author" value={formData.author} onChange={handleChange} />
+                    <input name="publicationdate" value={formData.publicationdate} onChange={handleChange} />
+                    <input name="genre" value={formData.genre} onChange={handleChange} />
+                    <button onClick={handleSave}>Save</button>
+                    <button onClick={handleDelete}>Delete</button>
+                </div>
+            );
         };
 
-        const handleClear = () => {
-            setSelectedItem(null);
-        };
-
-        const handleChange = (field, value) => {
-            setSelectedItem((prevItem) => ({
-                ...prevItem,
-                [field]: value,
-            }));
-        };
-
-        const handleSave = (item) => {
-            const method = item._id ? 'PUT' : 'POST';
-            const url = item._id ? `/api/books/${item._id}` : '/api/books';
-
-            fetch(url, {
-                method: method,
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(item),
-            })
-            .then(response => response.json())
-            .then(data => {
-                // If adding a new item, append to items
-                if (!item._id) {
-                    setItems([...items, data]);
-                } else {
-                    // Update the item in the items array
-                    setItems(items.map(i => (i._id === item._id ? data : i)));
-                }
-                setSelectedItem(null);
-            })
-            .catch(error => console.error('Error saving item:', error));
-        };
-
-        const handleDelete = () => {
-            if (!selectedItem || !selectedItem._id) return;
-
-            fetch(`/api/books/${selectedItem._id}`, {
-                method: 'DELETE',
-            })
-            .then(() => {
-                setItems(items.filter(i => i._id !== selectedItem._id));
-                setSelectedItem(null);
-            })
-            .catch(error => console.error('Error deleting item:', error));
-        };
-
-        return (
-            <div>
-                <ItemList items={items} onSelect={handleSelect} />
-                <Detail
-                    selectedItem={selectedItem}
-                    onClear={handleClear}
-                    onChange={handleChange}
-                    onSave={handleSave}
-                    onDelete={handleDelete}
-                />
-            </div>
-        );
-    };
-
-    ReactDOM.render(<App />, document.getElementById('root'));
-</script>
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
 </body>
 </html>
