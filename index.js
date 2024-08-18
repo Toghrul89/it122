@@ -1,56 +1,40 @@
-import express from 'express';
-import mongoose from 'mongoose';
-import cors from 'cors';
-import { Book } from './models/book.js';
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
+const Book = require('./models/book');
 
 const app = express();
-const PORT = 3000;
-
-app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static('public'));
-
+app.use(cors());
 app.set('view engine', 'ejs');
 
-const connectionString = "mongodb+srv://tjaffarov:sUkPG5IkmAvmV35m@cluster0.drlyzrq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
-
-mongoose.connect(connectionString, {
-    dbName: 'SCCPROJECT',
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-});
-
-mongoose.connection.on('open', () => {
-    console.log('Mongoose connected.');
-});
+mongoose.connect('mongodb://localhost:27017/bookdb', { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => console.log("MongoDB Connected"))
+    .catch(err => console.log("DB Connection Error: ", err));
 
 app.get('/', (req, res) => {
-    Book.find({}).lean()
-        .then((items) => {
-            res.render('home', { items: JSON.stringify(items) });
-        })
-        .catch(err => {
-            res.status(500).send('Database Error occurred');
-        });
+    res.render('home');
 });
 
-app.get('/details', (req, res) => {
-    const title = req.query.title;
-
-    Book.findOne({ title: title }).lean()
-        .then((item) => {
-            if (item) {
-                res.render('details', { item: JSON.stringify(item) });
-            } else {
-                res.status(404).send('Book not found');
-            }
-        })
-        .catch(err => {
-            res.status(500).send('Database Error occurred');
-        });
+app.get('/api/books', (req, res) => {
+    Book.find({})
+        .then(items => res.json(items))
+        .catch(err => res.status(500).send('Database Error occurred'));
 });
 
+app.put('/api/books/:id', (req, res) => {
+    Book.findByIdAndUpdate(req.params.id, req.body, { new: true })
+        .then(updatedItem => res.json(updatedItem))
+        .catch(err => res.status(500).send("Database error occurred"));
+});
+
+app.delete('/api/books/:id', (req, res) => {
+    Book.findByIdAndDelete(req.params.id)
+        .then(() => res.status(204).send())
+        .catch(err => res.status(500).send("Database error occurred"));
+});
+
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT}/`);
+    console.log(`Server running on port ${PORT}`);
 });
