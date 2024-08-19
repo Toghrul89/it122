@@ -1,53 +1,32 @@
-import express from 'express';
-import { Book } from './models/book.js';
-
+const express = require('express');
 const router = express.Router();
+const Book = require('./models/book');
 
-router.get('/books', async (req, res) => {
-  try {
-    const books = await Book.find({}).lean();
-    res.json(books);
-  } catch (err) {
-    res.status(500).json({ error: 'Database error occurred' });
-  }
-});
-
-router.get('/books/:title', async (req, res) => {
-  try {
-    const book = await Book.findOne({ title: req.params.title }).lean();
-    if (!book) {
-      return res.status(404).json({ error: 'Book not found' });
+router.get('/api/items', async (req, res) => {
+    try {
+        const items = await Book.find(); // Adjust this to your actual model
+        res.json(items);
+    } catch (error) {
+        res.status(500).send("Error fetching items");
     }
-    res.json(book);
-  } catch (err) {
-    res.status(500).json({ error: 'Database error occurred' });
-  }
 });
 
-router.post('/books', async (req, res) => {
-  const { title, author, publicationdate, genre } = req.body;
-  try {
-    const book = await Book.updateOne(
-      { title },
-      { title, author, publicationdate, genre },
-      { upsert: true }
-    );
-    res.json({ success: true, book });
-  } catch (err) {
-    res.status(500).json({ error: 'Database error occurred' });
-  }
-});
-
-router.delete('/books/:title', async (req, res) => {
-  try {
-    const result = await Book.deleteOne({ title: req.params.title });
-    if (result.deletedCount === 0) {
-      return res.status(404).json({ error: 'Book not found' });
+router.put('/api/items/:id', async (req, res) => {
+    try {
+        const item = await Book.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        res.json(item);
+    } catch (error) {
+        res.status(500).send("Error saving item");
     }
-    res.json({ success: true });
-  } catch (err) {
-    res.status(500).json({ error: 'Database error occurred' });
-  }
 });
 
-export default router;
+router.delete('/api/items/:id', async (req, res) => {
+    try {
+        await Book.findByIdAndDelete(req.params.id);
+        res.send("Item deleted");
+    } catch (error) {
+        res.status(500).send("Error deleting item");
+    }
+});
+
+module.exports = router;
