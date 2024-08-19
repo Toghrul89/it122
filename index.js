@@ -5,7 +5,7 @@ import apiRoutes from './apiRoutes.js';
 
 const app = express();
 
-mongoose.connect('mongodb://localhost/your-database-name', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect('mongodb://tjaffarov:sUkPG5IkmAvmV35m@cluster0.drlyzrq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', { useNewUrlParser: true, useUnifiedTopology: true });
 
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: true }));
