@@ -1,10 +1,11 @@
-const express = require('express');
-const router = express.Router();
-const Book = require('./models/book');
+import { Router } from 'express';
+import Book from './models/book.js';
+
+const router = Router();
 
 router.get('/api/items', async (req, res) => {
     try {
-        const items = await Book.find(); // Adjust this to your actual model
+        const items = await Book.find();
         res.json(items);
     } catch (error) {
         res.status(500).send("Error fetching items");
@@ -29,4 +30,4 @@ router.delete('/api/items/:id', async (req, res) => {
     }
 });
 
-module.exports = router;
+export default router;
