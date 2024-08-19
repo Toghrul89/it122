@@ -3,37 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book Details</title>
-
-    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <title>Item Details</title>
+    <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
+    <h1>Item Details</h1>
 
-<div id="root"></div>
+    <form id="item-form">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" value="<%= item.name %>">
+        
+        <button type="button" id="save-btn">Save</button>
+        <button type="button" id="delete-btn">Delete</button>
+    </form>
 
-<script type="text/babel">
-    const item = <%- item %>;
+    <script>
+        document.getElementById('save-btn').addEventListener('click', function() {
+            const name = document.getElementById('name').value;
+            const id = "<%= item._id %>";
 
-    const BookDetails = ({ item }) => {
-        return (
-            <div>
-                <h2>{item.title}</h2>
-                <p><strong>Author:</strong> {item.author}</p>
-                <p><strong>Publication Date:</strong> {item.publicationdate}</p>
-                <p><strong>Genre:</strong> {item.genre}</p>
-                <a href="/">Back to list</a>
-            </div>
-        );
-    };
+            fetch('/api/items/' + id, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ name }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert('Item saved successfully!');
+                window.location.reload();
+            })
+            .catch(error => {
+                console.error("Error saving item:", error);
+            });
+        });
 
-    const App = () => {
-        return <BookDetails item={item} />;
-    };
+        document.getElementById('delete-btn').addEventListener('click', function() {
+            const id = "<%= item._id %>";
 
-    ReactDOM.render(<App />, document.getElementById('root'));
-</script>
-
+            fetch('/api/items/' + id, {
+                method: 'DELETE',
+            })
+            .then(() => {
+                alert('Item deleted successfully!');
+                window.location.href = '/';  // Redirect back to the item list
+            })
+            .catch(error => {
+                console.error("Error deleting item:", error);
+            });
+        });
+    </script>
 </body>
 </html>
