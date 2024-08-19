@@ -25,3 +25,19 @@
         });
     });
 </script>
+
+<div id="item-list"></div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        fetch('/api/items') 
+            .then(response => response.json())
+            .then(data => {
+                let itemList = document.getElementById('item-list');
+                itemList.innerHTML = data.map(item => `<li>${item.name}</li>`).join('');
+            })
+            .catch(error => {
+                console.error("Error fetching items:", error);
+            });
+    });
+</script>
