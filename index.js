@@ -1,29 +1,29 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const path = require('path');
-const apiRoutes = require('./apiRoutes');
+import express from 'express';
+import mongoose from 'mongoose';
+import path from 'path';
+import apiRoutes from './apiRoutes.js';
+
 const app = express();
 
-// Database connection
-mongoose.connect('mongodb://localhost/SCCProject', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect('mongodb://localhost/your-database-name', { useNewUrlParser: true, useUnifiedTopology: true });
 
-app.use(express.json()); // For parsing application/json
-app.use(express.urlencoded({ extended: true })); // For parsing application/x-www-form-urlencoded
+app.use(express.json()); 
+app.use(express.urlencoded({ extended: true }));
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(path.resolve(), 'public')));
 
 app.use(apiRoutes);
 
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(path.resolve(), 'views'));
 
 app.get('/', (req, res) => {
     res.render('home');
 });
 
 app.get('/details/:id', async (req, res) => {
-    const Book = require('./models/book');
-    const item = await Book.findById(req.params.id);
+    const Book = await import('./models/book.js');  // Dynamically import the module
+    const item = await Book.default.findById(req.params.id);
     res.render('details', { item });
 });
 
