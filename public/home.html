@@ -1,43 +1,27 @@
-<html>
-    <head>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
-    </head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
 <body>
-<h2>Home</h2>
-<form method="POST" action="/search">
-    <input type="text" name="company" placeholder="company" required maxlength="100">
-    <input type="text" name="contact" placeholder="contact" maxlength="100">
-    <input type="date" name="close" placeholder="close" maxlength="100">
-    <input type="text" name="amount" placeholder="amount" maxlength="100">
-    <button>Search</button>
-    <button>Add</button>
-    <button>Delete</button>
-</form>
-</body>
+    <h1>Item List</h1>
+    <ul id="item-list"></ul>
 
-<script>
-    $(document).ready(function(){
-        var buttons = $('button');
-        
-        buttons.on('click', function() {
-            var $this = $(this);
-            $("form").attr("action", $this.text().toLowerCase());
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            fetch('/api/items') 
+                .then(response => response.json())
+                .then(data => {
+                    let itemList = document.getElementById('item-list');
+                    itemList.innerHTML = data.map(item => `<li><a href="/details/${item._id}">${item.name}</a></li>`).join('');
+                })
+                .catch(error => {
+                    console.error("Error fetching items:", error);
+                });
         });
-    });
-</script>
-
-<div id="item-list"></div>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        fetch('/api/items') 
-            .then(response => response.json())
-            .then(data => {
-                let itemList = document.getElementById('item-list');
-                itemList.innerHTML = data.map(item => `<li>${item.name}</li>`).join('');
-            })
-            .catch(error => {
-                console.error("Error fetching items:", error);
-            });
-    });
-</script>
+    </script>
+</body>
+</html>
