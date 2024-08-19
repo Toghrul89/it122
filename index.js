@@ -1,37 +1,30 @@
-import express from 'express';
-import mongoose from 'mongoose';
-import cors from 'cors';
-import { Book } from './models/book.js';
-
+const express = require('express');
+const mongoose = require('mongoose');
+const path = require('path');
+const apiRoutes = require('./apiRoutes');
 const app = express();
-app.use(express.json());
-app.use(cors());
-app.set('view engine', 'ejs');
 
-mongoose.connect('mongodb://localhost:27017/bookdb', { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => console.log("MongoDB Connected"))
-    .catch(err => console.log("DB Connection Error: ", err));
+// Database connection
+mongoose.connect('mongodb://localhost/SCCProject', { useNewUrlParser: true, useUnifiedTopology: true });
+
+app.use(express.json()); // For parsing application/json
+app.use(express.urlencoded({ extended: true })); // For parsing application/x-www-form-urlencoded
+
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(apiRoutes);
+
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 
 app.get('/', (req, res) => {
     res.render('home');
 });
 
-app.get('/api/books', (req, res) => {
-    Book.find({})
-        .then(items => res.json(items))
-        .catch(err => res.status(500).send('Database Error occurred'));
-});
-
-app.put('/api/books/:id', (req, res) => {
-    Book.findByIdAndUpdate(req.params.id, req.body, { new: true })
-        .then(updatedItem => res.json(updatedItem))
-        .catch(err => res.status(500).send("Database error occurred"));
-});
-
-app.delete('/api/books/:id', (req, res) => {
-    Book.findByIdAndDelete(req.params.id)
-        .then(() => res.status(204).send())
-        .catch(err => res.status(500).send("Database error occurred"));
+app.get('/details/:id', async (req, res) => {
+    const Book = require('./models/book');
+    const item = await Book.findById(req.params.id);
+    res.render('details', { item });
 });
 
 const PORT = process.env.PORT || 3000;
