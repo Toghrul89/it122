@@ -5,10 +5,13 @@ import apiRoutes from './apiRoutes.js';
 
 const app = express();
 
-mongoose.connect('mongodb://tjaffarov:sUkPG5IkmAvmV35m@cluster0.drlyzrq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect('mongodb+srv://tjaffarov:sUkPG5IkmAvmV35m@cluster0.drlyzrq.mongodb.net/SCCPROJECT?retryWrites=true&w=majority&appName=Cluster0', 
+    { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('MongoDB connected...'))
+  .catch(err => console.error('MongoDB connection error:', err));
 
 app.use(express.json()); 
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true })); 
 
 app.use(express.static(path.join(path.resolve(), 'public')));
 
@@ -22,7 +25,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/details/:id', async (req, res) => {
-    const Book = await import('./models/book.js');  // Dynamically import the module
+    const Book = await import('./models/book.js'); 
     const item = await Book.default.findById(req.params.id);
     res.render('details', { item });
 });
