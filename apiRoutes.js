@@ -1,16 +1,6 @@
-import { Router } from 'express';
-import Book from './models/book.js';
-
-const router = Router();
-
-router.get('/api/items', async (req, res) => {
-    try {
-        const items = await Book.find();
-        res.json(items);
-    } catch (error) {
-        res.status(500).send("Error fetching items");
-    }
-});
+const express = require('express');
+const router = express.Router();
+const Book = require('./models/book'); 
 
 router.get('/api/items/:id', async (req, res) => {
     try {
@@ -26,7 +16,7 @@ router.put('/api/items/:id', async (req, res) => {
         const updatedItem = await Book.findByIdAndUpdate(req.params.id, req.body, { new: true });
         res.json(updatedItem);
     } catch (error) {
-        res.status(500).send("Error saving item");
+        res.status(500).send("Error updating item");
     }
 });
 
@@ -39,4 +29,4 @@ router.delete('/api/items/:id', async (req, res) => {
     }
 });
 
-export default router;
+module.exports = router;
