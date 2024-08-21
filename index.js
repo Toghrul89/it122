@@ -15,6 +15,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(path.resolve(), 'public')));
 app.use(apiRoutes);
+
 app.set('view engine', 'ejs');
 app.set('views', path.join(path.resolve(), 'views'));
 
