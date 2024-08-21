@@ -29,4 +29,14 @@ router.delete('/api/items/:id', async (req, res) => {
     }
 });
 
+router.post('/api/items', async (req, res) => {
+    try {
+        const newItem = new Book(req.body);
+        const savedItem = await newItem.save();
+        res.json(savedItem);
+    } catch (error) {
+        res.status(500).send("Error creating new item");
+    }
+});
+
 module.exports = router;
