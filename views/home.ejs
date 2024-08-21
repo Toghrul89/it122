@@ -9,9 +9,10 @@
 <body>
     <h1>Item List</h1>
     <ul id="item-list">
-        <% items.forEach(function(item) { %>
-            <li><a href="#" class="item-link" data-id="<%= item._id %>"><%= item.name %></a></li>
-        <% }) %>
+        <% items.forEach(function(item) { 
+            if (item._id) { %>
+            <li><a href="#" class="item-link" data-id="<%= item._id %>"><%= item.title %></a></li>
+        <% }}); %>
     </ul>
 
     <div id="item-details"></div> <!-- Placeholder for the item details -->
@@ -26,26 +27,26 @@
                     .then(response => response.json())
                     .then(data => {
                         document.getElementById('item-details').innerHTML = `
-                            <h2>${data.name}</h2>
+                            <h2>${data.title}</h2>
                             <p>${data.description}</p>
                             <button id="edit-btn">Edit</button>
                             <button id="delete-btn">Delete</button>
                         `;
 
                         document.getElementById('edit-btn').addEventListener('click', function() {
-                            const newName = prompt("Enter new name:", data.name);
+                            const newName = prompt("Enter new name:", data.title);
                             if (newName) {
                                 fetch(`/api/items/${itemId}`, {
                                     method: 'PUT',
                                     headers: {
                                         'Content-Type': 'application/json',
                                     },
-                                    body: JSON.stringify({ name: newName }),
+                                    body: JSON.stringify({ title: newName }),
                                 })
                                 .then(response => response.json())
                                 .then(updatedData => {
                                     alert('Item updated successfully!');
-                                    event.target.textContent = updatedData.name;
+                                    event.target.textContent = updatedData.title;
                                 })
                                 .catch(error => console.error('Error updating item:', error));
                             }
