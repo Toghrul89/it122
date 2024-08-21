@@ -25,11 +25,47 @@
                 fetch(`/api/items/${itemId}`)
                     .then(response => response.json())
                     .then(data => {
+                        // Render item details dynamically without leaving the page
                         document.getElementById('item-details').innerHTML = `
                             <h2>${data.title}</h2>
                             <p>${data.description}</p>
-                            <!-- More item details can go here -->
+                            <!-- Add other item details here -->
+                            <button id="edit-btn">Edit</button>
+                            <button id="delete-btn">Delete</button>
                         `;
+
+                        document.getElementById('edit-btn').addEventListener('click', function() {
+                            const newTitle = prompt("Enter new title:", data.title);
+                            if (newTitle) {
+                                fetch(`/api/items/${itemId}`, {
+                                    method: 'PUT',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify({ title: newTitle }),
+                                })
+                                .then(response => response.json())
+                                .then(updatedData => {
+                                    alert('Item updated successfully!');
+                                    document.querySelector(`[data-id="${itemId}"]`).textContent = updatedData.title;
+                                })
+                                .catch(error => console.error('Error updating item:', error));
+                            }
+                        });
+
+                        document.getElementById('delete-btn').addEventListener('click', function() {
+                            if (confirm('Are you sure you want to delete this item?')) {
+                                fetch(`/api/items/${itemId}`, {
+                                    method: 'DELETE',
+                                })
+                                .then(() => {
+                                    alert('Item deleted successfully!');
+                                    document.querySelector(`[data-id="${itemId}"]`).parentElement.remove();
+                                    document.getElementById('item-details').innerHTML = '';
+                                })
+                                .catch(error => console.error('Error deleting item:', error));
+                            }
+                        });
                     })
                     .catch(error => console.error('Error fetching item details:', error));
             }
