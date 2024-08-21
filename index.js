@@ -6,7 +6,7 @@ import Book from './models/book.js';
 
 const app = express();
 
-mongoose.connect('mongodb+srv://tjaffarov:sUkPG5IkmAvmV35m@cluster0.drlyzrq.mongodb.net/yourDatabaseName?retryWrites=true&w=majority&appName=Cluster0', 
+mongoose.connect('mongodb+srv://tjaffarov:sUkPG5IkmAvmV35m@cluster0.drlyzrq.mongodb.net/SCCPROJECT?retryWrites=true&w=majority&appName=Cluster0', 
     { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('MongoDB connected...'))
   .catch(err => console.error('MongoDB connection error:', err));
