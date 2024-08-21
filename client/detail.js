@@ -7,20 +7,21 @@ function Detail() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('/api/items/:id'); 
+        const response = await fetch('/api/items/1'); // Replace '1' with the actual item ID
         const data = await response.json();
         setItem(data);
+        setIsNew(!data._id); // Check if the item is new or existing
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     };
 
     fetchData();
-  }, []);
+  }, []); // Empty dependency array means this runs once on mount
 
   const handleSave = async () => {
     try {
-      const method = isNew ? 'POST' : 'PUT'; 
+      const method = isNew ? 'POST' : 'PUT';
       const response = await fetch(isNew ? '/api/items' : `/api/items/${item._id}`, {
         method,
         headers: {
@@ -29,7 +30,7 @@ function Detail() {
         body: JSON.stringify(item),
       });
       const data = await response.json();
-      setItem(data); 
+      setItem(data);
       setIsNew(false);
     } catch (error) {
       console.error('Error saving data:', error);
@@ -44,8 +45,8 @@ function Detail() {
           'Content-Type': 'application/json',
         },
       });
-      setItem({}); // Clear the form
-      setIsNew(true); 
+      setItem({});
+      setIsNew(true);
     } catch (error) {
       console.error('Error deleting data:', error);
     }
@@ -84,4 +85,3 @@ function Detail() {
 }
 
 export default Detail;
-
