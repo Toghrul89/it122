@@ -1,7 +1,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import path from 'path';
-import apiRoutes from './apiRoutes.js';
+import apiRoutes from './apiRoutes.js'; 
 import Book from './models/book.js';
 
 const app = express();
@@ -16,23 +16,20 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(path.resolve(), 'public')));
 app.use(apiRoutes);
 
-app.set('view engine', 'ejs');
-app.set('views', path.join(path.resolve(), 'views'));
-
-app.get('/', async (req, res) => {
-    try {
-        const items = await Book.find();
-        res.render('home', { items });
-    } catch (error) {
-        res.status(500).send("Error fetching items");
-    }
-});
-
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.join(path.resolve(), 'client', 'build')));
-    
+
     app.get('*', (req, res) => {
         res.sendFile(path.resolve(path.resolve(), 'client', 'build', 'index.html'));
+    });
+} else {
+    app.get('/', async (req, res) => {
+        try {
+            const items = await Book.find();
+            res.render('home', { items });
+        } catch (error) {
+            res.status(500).send("Error fetching items");
+        }
     });
 }
 
