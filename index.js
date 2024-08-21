@@ -2,6 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import path from 'path';
 import apiRoutes from './apiRoutes.js';
+import Book from './models/book.js';
 
 const app = express();
 
@@ -16,10 +17,13 @@ app.use(express.static(path.join(path.resolve(), 'public')));
 app.use(apiRoutes);
 app.set('view engine', 'ejs');
 app.set('views', path.join(path.resolve(), 'views'));
-
 app.get('/', async (req, res) => {
-    const items = await Book.find();
-    res.render('home', { items });
+    try {
+        const items = await Book.find();
+        res.render('home', { items });
+    } catch (error) {
+        res.status(500).send("Error fetching items");
+    }
 });
 
 const PORT = process.env.PORT || 3000;
