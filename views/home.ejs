@@ -10,7 +10,7 @@
     <h1>Item List</h1>
     <ul id="item-list">
         <% items.forEach(function(item) { %>
-            <li><a href="#" class="item-link" data-id="<%= item._id %>"><%= item.title %></a></li>
+            <li><a href="#" class="item-link" data-id="<%= item._id %>"><%= item.name %></a></li>
         <% }) %>
     </ul>
 
@@ -25,29 +25,27 @@
                 fetch(`/api/items/${itemId}`)
                     .then(response => response.json())
                     .then(data => {
-                        // Render item details dynamically without leaving the page
                         document.getElementById('item-details').innerHTML = `
-                            <h2>${data.title}</h2>
+                            <h2>${data.name}</h2>
                             <p>${data.description}</p>
-                            <!-- Add other item details here -->
                             <button id="edit-btn">Edit</button>
                             <button id="delete-btn">Delete</button>
                         `;
 
                         document.getElementById('edit-btn').addEventListener('click', function() {
-                            const newTitle = prompt("Enter new title:", data.title);
-                            if (newTitle) {
+                            const newName = prompt("Enter new name:", data.name);
+                            if (newName) {
                                 fetch(`/api/items/${itemId}`, {
                                     method: 'PUT',
                                     headers: {
                                         'Content-Type': 'application/json',
                                     },
-                                    body: JSON.stringify({ title: newTitle }),
+                                    body: JSON.stringify({ name: newName }),
                                 })
                                 .then(response => response.json())
                                 .then(updatedData => {
                                     alert('Item updated successfully!');
-                                    document.querySelector(`[data-id="${itemId}"]`).textContent = updatedData.title;
+                                    event.target.textContent = updatedData.name;
                                 })
                                 .catch(error => console.error('Error updating item:', error));
                             }
@@ -60,7 +58,7 @@
                                 })
                                 .then(() => {
                                     alert('Item deleted successfully!');
-                                    document.querySelector(`[data-id="${itemId}"]`).parentElement.remove();
+                                    event.target.parentElement.remove();
                                     document.getElementById('item-details').innerHTML = '';
                                 })
                                 .catch(error => console.error('Error deleting item:', error));
