@@ -1,6 +1,6 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const Book = require('./models/book'); 
+import Book from './models/book.js';
 
 router.get('/api/items/:id', async (req, res) => {
     try {
@@ -39,4 +39,4 @@ router.post('/api/items', async (req, res) => {
     }
 });
 
-module.exports = router;
+export default router;
