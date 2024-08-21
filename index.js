@@ -6,7 +6,7 @@ import Book from './models/book.js';
 
 const app = express();
 
-mongoose.connect('mongodb+srv://tjaffarov:sUkPG5IkmAvmV35m@cluster0.drlyzrq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', 
+mongoose.connect('mongodb+srv://tjaffarov:sUkPG5IkmAvmV35m@cluster0.drlyzrq.mongodb.net/yourDatabaseName?retryWrites=true&w=majority&appName=Cluster0', 
     { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('MongoDB connected...'))
   .catch(err => console.error('MongoDB connection error:', err));
@@ -23,15 +23,11 @@ if (process.env.NODE_ENV === 'production') {
         res.sendFile(path.resolve(path.resolve(), 'client', 'build', 'index.html'));
     });
 } else {
-    // In development mode, simply render the home view or other EJS views if needed.
     app.get('/', async (req, res) => {
         try {
-            console.log("Fetching items from MongoDB...");
             const items = await Book.find();
-            console.log("Items fetched successfully:", items);
             res.render('home', { items });
         } catch (error) {
-            console.error("Error fetching items:", error);
             res.status(500).send("Error fetching items");
         }
     });
