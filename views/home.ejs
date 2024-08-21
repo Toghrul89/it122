@@ -8,24 +8,32 @@
 </head>
 <body>
     <h1>Item List</h1>
-    <ul id="item-list"></ul>
+    <ul id="item-list">
+        <% items.forEach(function(item) { %>
+            <li><a href="#" class="item-link" data-id="<%= item._id %>"><%= item.title %></a></li>
+        <% }) %>
+    </ul>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        fetch('/api/items')
-            .then(response => response.json())
-            .then(data => {
-                console.log('Data received:', data);
-                let itemList = document.getElementById('item-list');
-                itemList.innerHTML = data.map(item => {
-                    return `<li><a href="/details/${item._id}">${item.title}</a></li>`;
-                }).join('');
-            })
-            .catch(error => {
-                console.error("Error fetching items:", error);
-            });
-    });
-</script>
+    <div id="item-details"></div> <!-- Placeholder for the item details -->
 
+    <script>
+        document.getElementById('item-list').addEventListener('click', function(event) {
+            if (event.target.classList.contains('item-link')) {
+                event.preventDefault();
+                const itemId = event.target.getAttribute('data-id');
+
+                fetch(`/api/items/${itemId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('item-details').innerHTML = `
+                            <h2>${data.title}</h2>
+                            <p>${data.description}</p>
+                            <!-- More item details can go here -->
+                        `;
+                    })
+                    .catch(error => console.error('Error fetching item details:', error));
+            }
+        });
+    </script>
 </body>
 </html>
