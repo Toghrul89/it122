@@ -10,24 +10,16 @@ mongoose.connect('mongodb+srv://tjaffarov:sUkPG5IkmAvmV35m@cluster0.drlyzrq.mong
   .then(() => console.log('MongoDB connected...'))
   .catch(err => console.error('MongoDB connection error:', err));
 
-app.use(express.json()); 
-app.use(express.urlencoded({ extended: true })); 
-
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(path.resolve(), 'public')));
-
 app.use(apiRoutes);
-
 app.set('view engine', 'ejs');
 app.set('views', path.join(path.resolve(), 'views'));
 
-app.get('/', (req, res) => {
-    res.render('home');
-});
-
-app.get('/details/:id', async (req, res) => {
-    const Book = await import('./models/book.js'); 
-    const item = await Book.default.findById(req.params.id);
-    res.render('details', { item });
+app.get('/', async (req, res) => {
+    const items = await Book.find();
+    res.render('home', { items });
 });
 
 const PORT = process.env.PORT || 3000;
