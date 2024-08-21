@@ -14,9 +14,12 @@ mongoose.connect('mongodb+srv://tjaffarov:sUkPG5IkmAvmV35m@cluster0.drlyzrq.mong
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(path.resolve(), 'public')));
+
+app.set('view engine', 'ejs');
+app.set('views', path.join(path.resolve(), 'views'));
+
 app.use(apiRoutes);
 
-// Serve React app in production
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.join(path.resolve(), 'client', 'build')));
 
